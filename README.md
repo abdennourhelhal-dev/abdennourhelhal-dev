@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./assets/abdennour-dev.png" alt="Abdennour Dev logo" width="110" />
+
 # `> hello_world 👋`
 
 ### Abdennour Helhal
@@ -45,6 +47,8 @@ Working across frontend, backend, mobile, desktop, and product design.
 <tr>
 <td width="50%" valign="top">
 
+<a href="https://storelydz.com/"><img src="./assets/storely.png" alt="Storely logo" height="95" /></a>
+
 #### 🛒 Storely
 
 E-commerce software platform.
@@ -53,6 +57,8 @@ E-commerce software platform.
 
 </td>
 <td width="50%" valign="top">
+
+<a href="https://modhakkirati.online/ar"><img src="./assets/modhakkirati.png" alt="Modhakkirati logo" height="95" /></a>
 
 #### 📚 Modhakkirati
 
