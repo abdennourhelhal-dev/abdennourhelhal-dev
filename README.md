@@ -1,101 +1,109 @@
 <div align="center">
 
-# <code>abdennour@github:~$ whoami</code>
+# `> hello_world 👋`
 
-<h1>Hey, I'm Abdennour Helhal 👋</h1>
-
+### Abdennour Helhal
 **Full-Stack Developer · Independent Software Builder**
 
-<sub>Building and shipping real-world web, mobile, desktop, SaaS, and e-commerce products.</sub>
+*I build and ship web platforms, e-commerce systems, mobile apps, and desktop software.*
 
-[![GitHub](https://img.shields.io/badge/GitHub-abdennourhelhal--dev-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/abdennourhelhal-dev)
-[![Storely](https://img.shields.io/badge/Live-Storely-238636?style=for-the-badge&logo=vercel&logoColor=white)](https://storelydz.com/)
-[![Modhakkirati](https://img.shields.io/badge/Live-Modhakkirati-238636?style=for-the-badge&logo=readme&logoColor=white)](https://modhakkirati.online/ar)
+[![Portfolio](https://img.shields.io/badge/Portfolio-View%20Projects-58A6FF?style=for-the-badge&logo=vercel&logoColor=white)](https://abdennour-dev.netlify.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-abdennourhelhal--dev-181717?style=for-the-badge&logo=github)](https://github.com/abdennourhelhal-dev)
+[![Email](https://img.shields.io/badge/Email-Contact%20Me-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:abdennourhelhal@gmail.com)
 
 </div>
 
 ---
 
-### `> cat about_me.txt`
+### `$ whoami`
 
 ```text
-Location    : Algeria
-Focus       : Full-stack development & product engineering
-Experience  : Building, deploying, and maintaining real products
-Interests   : SaaS · E-commerce · Mobile · Desktop
-Approach    : From idea and technical decisions to production
+Developer focused on taking ideas from concept to production.
+Working across frontend, backend, mobile, desktop, and product design.
+9 independently built products shipped and in use.
 ```
 
-### `> ls ./tech-stack`
+### `$ cat tech-stack.md`
 
-**Languages & fundamentals**
+**Languages & frontend**
 
-[![Languages](https://skillicons.dev/icons?i=js,ts,python,cpp,html,css&theme=dark)](https://skillicons.dev)
+[![Languages and frontend](https://skillicons.dev/icons?i=js,ts,python,cpp,html,css,react,nextjs,tailwind,vite&theme=dark)](https://skillicons.dev)
 
-**Frontend & mobile**
+**Backend & databases**
 
-[![Frontend](https://skillicons.dev/icons?i=react,nextjs,tailwind,flutter,vite&theme=dark)](https://skillicons.dev)
+[![Backend and databases](https://skillicons.dev/icons?i=nodejs,nestjs,postgres,mongodb,mysql,supabase,firebase&theme=dark)](https://skillicons.dev)
 
-**Backend & data**
+**Mobile & tooling**
 
-[![Backend](https://skillicons.dev/icons?i=nodejs,nestjs,postgres,mongodb,mysql,supabase,firebase&theme=dark)](https://skillicons.dev)
+[![Mobile and tooling](https://skillicons.dev/icons?i=flutter,docker,git&theme=dark)](https://skillicons.dev)
 
-**Tools**
+**Also:** React Native (see the [React Native website](https://reactnative.dev/)).
 
-[![Tools](https://skillicons.dev/icons?i=git,docker&theme=dark)](https://skillicons.dev)
-
-> React Native is also part of my stack (represented by the React icon above).
-
-### `> ls ./featured-products --live`
+### `$ ls featured-projects/`
 
 <table>
 <tr>
 <td width="50%" valign="top">
-<a href="https://storelydz.com/"><img src="https://img.shields.io/badge/STORELY-LIVE-238636?style=for-the-badge&logo=shopify&logoColor=white" alt="Storely live project" /></a>
-<h3>Storely</h3>
-<p>E-commerce store creation platform for Algeria, with store management, delivery integrations and order workflows.</p>
-<a href="https://storelydz.com/"><strong>↗ Visit live product</strong></a>
+
+#### 🛒 Storely
+
+E-commerce software platform.
+
+[![Live Storely](https://img.shields.io/badge/↗_Live_Website-storelydz.com-238636?style=for-the-badge)](https://storelydz.com/)
+
 </td>
 <td width="50%" valign="top">
-<a href="https://modhakkirati.online/ar"><img src="https://img.shields.io/badge/MODHAKKIRATI-LIVE-238636?style=for-the-badge&logo=readme&logoColor=white" alt="Modhakkirati live project" /></a>
-<h3>Modhakkirati | مذكرتي</h3>
-<p>Educational resource platform for teachers, with a catalog, document customization, preview and digital checkout.</p>
-<a href="https://modhakkirati.online/ar"><strong>↗ Visit live product</strong></a>
+
+#### 📚 Modhakkirati
+
+Educational platform with a landing page, store, and dashboard.
+
+[![Live Modhakkirati](https://img.shields.io/badge/↗_Live_Website-modhakkirati.online-238636?style=for-the-badge)](https://modhakkirati.online/ar)
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
+
+#### 🧩 Custom E-Commerce Platform
+
+E-commerce storefronts and dashboards, with sales analytics, product and inventory management, and payment integration. The portfolio case study lists **React · Next.js · MySQL · Stripe**.
+
+[![Case Study](https://img.shields.io/badge/↗_Read_Case_Study-Portfolio-58A6FF?style=for-the-badge)](https://abdennour-dev.netlify.app/projects/custom-ecommerce-platform)
+[![OZA Live](https://img.shields.io/badge/↗_OZA_Unique-Live_Site-238636?style=for-the-badge)](https://oza-unique.netlify.app/#products)
+
+**Showcased storefronts:** OZA Unique · Sahawi Shop · Dentéa Bright
+
 </td>
 </tr>
 </table>
 
-### `> ls ./other-shipped-projects`
+<details>
+<summary><b>More shipped projects</b></summary>
 
-| Project | Product type | Link |
-|:--|:--|:--|
-| **OZA Unique** | E-commerce storefront + dashboard | [↗ Live site](https://oza-unique.netlify.app/#products) |
-| **Sahawi Shop** | E-commerce storefront + dashboard | Not provided |
-| **Donter Shop** | E-commerce storefront + dashboard | Not provided |
-| **Mori Login** | Login system + dashboard | Not provided |
-| **Mori Landing** | Landing page | Not provided |
-| **Mori App** | React Native application + dashboard | Not provided |
-| **ES** | Desktop application for stores | Not provided |
+| Project | What I built |
+| --- | --- |
+| Mori Login | Login system and dashboard |
+| Mori Landing | Landing page |
+| Mori App | React Native mobile application and dashboard |
+| ES | Desktop application for stores |
 
-<sub>Some products are private or do not have a public link listed here. A separate collaborative project is still in development.</sub>
+Additional product links and case studies will be added when available.
 
-### `> github --stats`
+</details>
 
-<div align="center">
+### `$ git status`
 
-<img height="165" src="https://github-readme-stats.vercel.app/api?username=abdennourhelhal-dev&show_icons=true&theme=github_dark&hide_border=true" alt="GitHub statistics" />
-<img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=abdennourhelhal-dev&layout=compact&theme=github_dark&hide_border=true" alt="Most used languages in visible repositories" />
+Rather than displaying incomplete third-party commit totals, explore my [GitHub contribution activity](https://github.com/abdennourhelhal-dev) directly. Some of my work is in private repositories.
 
-<img width="95%" src="https://github-readme-activity-graph.vercel.app/graph?username=abdennourhelhal-dev&theme=github-compact&hide_border=true" alt="GitHub contribution activity graph" />
+### `$ open portfolio`
 
-<sub>Statistics are provided by third-party services and may not fully reflect private repository activity.</sub>
+**For screenshots, project walkthroughs, and detailed case studies:**
 
-</div>
+[![Explore Portfolio](https://img.shields.io/badge/Explore_My_Portfolio-View_Work-58A6FF?style=for-the-badge&logo=googlechrome&logoColor=white)](https://abdennour-dev.netlify.app/)
 
 ---
 
 <div align="center">
-
-<code>build → ship → learn → improve</code>
-
+<sub>Build. Ship. Improve. Repeat.</sub>
 </div>
