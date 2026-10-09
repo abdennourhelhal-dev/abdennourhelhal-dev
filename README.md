@@ -29,7 +29,7 @@ Working across frontend, backend, mobile, desktop, and product design.
 
 **Languages & frontend**
 
-[![Languages and frontend](https://skillicons.dev/icons?i=js,ts,python,cpp,html,css,react,nextjs,tailwind,vite&theme=dark)](https://skillicons.dev)
+[![Languages and frontend](https://skillicons.dev/icons?i=js,ts,python,cpp,swift,html,css,react,nextjs,tailwind,vite&theme=dark)](https://skillicons.dev)
 
 **Backend & databases**
 
@@ -47,7 +47,7 @@ Working across frontend, backend, mobile, desktop, and product design.
 <tr>
 <td width="50%" valign="top">
 
-<a href="https://storelydz.com/"><img src="./assets/storely.png" alt="Storely logo" height="95" /></a>
+<a href="https://storelydz.com/"><img src="./assets/storely.svg" alt="Storely logo" height="95" /></a>
 
 #### 🛒 Storely
 
