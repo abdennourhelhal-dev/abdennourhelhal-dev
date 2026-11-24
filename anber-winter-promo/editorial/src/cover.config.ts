@@ -1,129 +1,182 @@
-import type { CoverConfig, El } from './types';
+import { calendar } from './data/calendar';
+import { columnBox, table } from './data/table';
+import { PAPERS } from './papers';
+import { PAD, W } from './theme';
+import type { CoverConfig, El, PaperEl } from './types';
 
-// Anber School — winter holiday courses, editorial-cover version.
-// One cover per voice-over line; scene starts follow script.md (0, 3, 7, 13, 20, 25 s).
-// small = Cairo 900 / Schibsted Grotesk Black · huge = Amiri Italic / Instrument Serif Italic.
-// Every row ends above y = 1536 (bottom fifth empty).
-// Huge Amiri words are set without shadda: Amiri Italic stacks it far above tall letters at display sizes.
+// Anber School — winter courses, v3.
+// Navy cover (intro / outro) → cream "inside pages" (data, real exam papers) → navy back cover.
+// Timings follow script.md v2. Every row ends above y = 1536 (bottom fifth stays empty).
+// Huge Amiri words are set without shadda (Amiri Italic stacks it far above tall letters).
 
-const masthead: El = { text: 'anber school', role: 'small', motion: 'cut', at: 0, y: 200, align: 'left' };
+const NAVY = '#0F1421'; // sampled from the school's logo card
+const GOLD = '#D4A23A'; // flat logo gold
+const CREAM = '#F4EEE1';
 
-const subjects: [string, string][] = [
-  ['الرياضيات', 'mathématiques'],
-  ['الفيزياء', 'physique'],
-  ['العلوم', 'sciences'],
-  ['العربية', 'arabe'],
-  ['الفرنسية', 'français'],
-  ['الإنجليزية', 'anglais'],
-  ['الفلسفة', 'philosophie'],
+// ── 3–8 s · calendar: official winter break 2026/2027 (ministerial decision no. 41) ──────────
+const CAL = { y: 520, start: '2026-11-29', weeks: 6, cellH: 100, headH: 60 };
+const legendY = 1205;
+const legend: El[] = [
+  { kind: 'rect', x: W - PAD - 34, y: legendY + 9, w: 34, h: 34, at: 100, dur: 6 },
+  { text: 'عطلة الشتاء: من مساء 17 ديسمبر إلى صباح 3 جانفي', role: 'small', size: 32, at: 100, y: legendY, x1: W - PAD - 52 },
+  { kind: 'box', x: W - PAD - 32, y: legendY + 64, w: 30, h: 30, at: 108, width: 3, dur: 8 },
+  { text: 'اختبارات الفصل الأول: 6 – 10 ديسمبر', role: 'small', size: 32, at: 108, y: legendY + 54, x1: W - PAD - 52 },
+  { kind: 'box', x: W - PAD - 32, y: legendY + 118, w: 30, h: 30, at: 116, width: 3, dur: 8, stroke: 'accent' },
+  { text: 'دورات عنبر: ابتداءً من [التاريخ]', role: 'small', size: 32, at: 116, y: legendY + 108, x1: W - PAD - 52 },
+  { text: 'المصدر: وزارة التربية الوطنية · الرزنامة المدرسية 2026/2027', role: 'small', size: 22, color: 'dim', at: 124, y: legendY + 180 },
 ];
-const SUB_START = 20, SUB_STEP = 22;
-const subjectEls: El[] = subjects.flatMap(([ar, fr], i): El[] => {
-  const at = SUB_START + i * SUB_STEP;
-  const until = i < subjects.length - 1 ? at + SUB_STEP : undefined;
-  return [
-    { text: ar, role: 'huge', motion: 'rise', at, until, y: 500, max: 380, align: 'center' },
-    { text: `0${i + 1} / 07`, role: 'small', motion: 'cut', at, until, y: 1000, align: 'left' },
-    { text: fr, role: 'small', motion: 'cut', at, until, y: 1000, align: 'right' },
-  ];
+
+// ── 8–14 s · levels table with the real BEM / BAC 2026 first pages ─────────────────────────
+const COLS = [380, 312, 260]; // right → left: level | certificate | paper
+const TBL_Y = 650, HEAD_H = 56, ROW_H = 330;
+const paperCol = columnBox(COLS, 2);
+const thumb = (src: string | null, label: string, tag: string, row: number, at: number, rot: number): PaperEl => ({
+  kind: 'paper', src, label, tag, at, rot, from: 'left', w: 200,
+  x: paperCol.x0 + (paperCol.x1 - paperCol.x0 - 200) / 2, y: TBL_Y + HEAD_H + row * ROW_H + (ROW_H - 283) / 2,
 });
+const levelBand = (row: number, at: number): El => ({
+  kind: 'rect', x: W - PAD - COLS[0] + 6, y: TBL_Y + HEAD_H + row * ROW_H + 6, w: COLS[0] - 12, h: ROW_H - 12, at, dur: 10,
+});
+
+// ── 14–18.5 s · subjects = real BAC 2026 (sciences expérimentales) papers ───────────────────
+const sheet = (src: string | null, label: string, tag: string, at: number, x: number, y: number, rot: number, from: 'left' | 'right'): PaperEl => ({
+  kind: 'paper', src, label, at, x, y, rot, from, w: 560, callout: { x: 0.05, y: 0.02, w: 0.9, h: 0.15, at: at + 16 },
+});
+
+// ── 18.5–23.5 s · five real sheets fanned out (reading order: right → left) ────────────────
+const FAN = [
+  { src: PAPERS.bacMath, label: 'bac 2026 · رياضيات', tag: 'bac 2026\nmaths' },
+  { src: PAPERS.bacPhys, label: 'bac 2026 · فيزياء', tag: 'bac 2026\nphysique' },
+  { src: PAPERS.bacEng, label: 'bac 2026 · إنجليزية', tag: 'bac 2026\nanglais' },
+  { src: PAPERS.bemMath, label: 'bem 2026 · رياضيات', tag: 'bem 2026\nmaths' },
+  { src: PAPERS.bemPhys, label: 'bem 2026 · فيزياء', tag: 'bem 2026\nphysique' },
+];
+const fanX = [710, 550, 390, 230, 70];
+const fanY = [830, 800, 785, 800, 830];
+const fanR = [9, 4.5, 0, -4.5, -9];
+const fan: El[] = FAN.map((p, i) => ({
+  kind: 'paper', src: p.src, label: p.label, tag: p.tag, tagSide: 'right', at: 44 + i * 7, x: fanX[i], y: fanY[i], w: 300, rot: fanR[i], from: 'bottom',
+}));
 
 export const config: CoverConfig = {
   durationInFrames: 900,
+  palettes: {
+    cover: { bg: NAVY, huge: GOLD, small: '#FFFFFF', rule: 'rgba(212,162,58,0.55)', accent: GOLD, onAccent: NAVY, dim: 'rgba(255,255,255,0.55)' },
+    inside: { bg: CREAM, huge: NAVY, small: NAVY, rule: 'rgba(15,20,33,0.55)', accent: GOLD, onAccent: NAVY, dim: 'rgba(15,20,33,0.5)' },
+  },
   scenes: [
-    // 0–3s · «العطلة الشتوية… فرصتك باش تسبق!»
+    // 0–3 s · «لا تُضيّع العطلة… استغلّها!» — cover
     {
-      from: 0, duration: 90,
+      from: 0, duration: 90, theme: 'cover', drift: 14,
       els: [
-        { text: 'العطلة الشتوية', role: 'small', motion: 'snap', at: 0, hold: 24, hugeY: 760, y: 200, align: 'right' },
-        { text: 'anber school', role: 'small', motion: 'rise', at: 30, y: 200, align: 'left' },
-        { kind: 'rule', y: 300, at: 30, from: 'right' },
-        { text: 'فرصتك', role: 'huge', motion: 'rise', at: 36, y: 330, max: 420, align: 'right' },
-        { kind: 'rule', y: 700, at: 44, from: 'left' },
-        { text: 'باش تسبق!', role: 'huge', motion: 'wipe', at: 54, y: 780, max: 330, align: 'left' },
-        { kind: 'rule', y: 1070, at: 62, from: 'right' },
+        { text: 'لا تضيع العطلة', role: 'small', motion: 'snap', at: 0, hold: 30, hugeY: 760, y: 200, align: 'right' },
+        { kind: 'rule', y: 300, at: 34, from: 'right' },
+        { text: 'anber school', role: 'small', at: 36, y: 200, align: 'left' },
+        { text: 'استغلها!', role: 'huge', motion: 'rise', at: 42, y: 340, max: 470, align: 'right' },
+        { kind: 'rule', y: 770, at: 50, from: 'left' },
+        { text: 'winter courses 2026/27', role: 'small', at: 58, y: 900, align: 'left' },
+        { kind: 'rule', y: 1000, at: 62, from: 'right' },
       ],
     },
-    // 3–7s · «مدرسة عنبر للتميّز تفتح لكم دورات عطلة الشتاء»
+    // 3–8 s · «مدرسة عنبر تُعلن عن انطلاق دورات الشتاء، ابتداءً من [التاريخ]» — calendar page
     {
-      from: 90, duration: 120,
+      from: 90, duration: 150, theme: 'inside', transitionIn: 'slideUp', drift: 10,
       els: [
-        masthead,
-        { text: 'مدرسة عنبر تفتح لكم', role: 'small', motion: 'rise', at: 0, y: 200, align: 'right' },
-        { kind: 'rule', y: 300, at: 4, from: 'left' },
-        { text: 'دورات', role: 'huge', motion: 'rise', at: 10, y: 320, max: 460, align: 'right' },
-        { kind: 'rule', y: 730, at: 18, from: 'right' },
-        { text: 'عطلة الشتاء', role: 'huge', motion: 'wipe', at: 40, y: 810, max: 300, align: 'center' },
-        { kind: 'rule', y: 1080, at: 46, from: 'left' },
-        { text: 'الانطلاق: [التاريخ]', role: 'small', motion: 'rise', at: 70, y: 1210, align: 'right' },
-        { text: 'winter 2026', role: 'small', motion: 'rise', at: 74, y: 1210, align: 'left' },
+        { text: 'مدرسة عنبر تعلن عن انطلاق', role: 'small', at: 14, y: 150, align: 'right' },
+        { text: '2026 / 2027', role: 'small', at: 18, y: 150, align: 'left' },
+        { text: 'دورات الشتاء', role: 'huge', motion: 'wipe', at: 46, y: 225, max: 250, align: 'right' },
+        ...calendar({
+          ...CAL, at: 20, month: 11, monthNames: { 11: 'ديسمبر', 0: 'جانفي' },
+          outline: { from: '2026-12-06', to: '2026-12-10', at: 70 },
+          band: { from: '2026-12-18', to: '2027-01-02', at: 82, dur: 22 },
+        }),
+        ...legend,
       ],
     },
-    // 7–13s · «لتلاميذ الرابعة متوسط… والثالثة ثانوي، جميع الشُّعب»
+    // 8–14 s · «استعدّ لشهادة التعليم المتوسط والبكالوريا… للسنة الرابعة متوسط والثالثة ثانوي، بجميع الشُّعب»
     {
-      from: 210, duration: 180,
+      from: 240, duration: 180, theme: 'inside', transitionIn: 'push', drift: 8,
       els: [
-        masthead,
-        { text: 'لتلاميذ', role: 'small', motion: 'rise', at: 0, y: 200, align: 'right' },
-        { kind: 'rule', y: 300, at: 4, from: 'right' },
-        { text: 'الرابعة متوسط', role: 'huge', motion: 'rise', at: 16, y: 330, max: 300, align: 'right' },
-        { kind: 'rule', y: 610, at: 24, from: 'left' },
-        { text: 'bem', role: 'small', motion: 'wipe', at: 40, y: 690, align: 'left' },
-        { text: 'الثالثة ثانوي', role: 'huge', motion: 'under', at: 76, y: 780, under: 770, max: 300, align: 'left' },
-        { kind: 'rule', y: 1060, at: 84, from: 'right' },
-        { text: 'bac', role: 'small', motion: 'wipe', at: 100, y: 1140, align: 'right' },
-        { text: 'جميع الشُّعب', role: 'small', motion: 'wipe', at: 120, y: 1230, align: 'left' },
+        { text: 'المستويات', role: 'small', at: 14, y: 150, align: 'right' },
+        { text: 'bem · bac', role: 'small', at: 16, y: 150, align: 'left' },
+        { text: 'استعد', role: 'huge', motion: 'rise', at: 16, y: 215, max: 300, align: 'right' },
+        { text: 'لشهادة التعليم المتوسط والبكالوريا', role: 'small', size: 38, at: 30, y: 560, align: 'right' },
+        levelBand(0, 84),
+        levelBand(1, 117),
+        ...table({
+          at: 34, y: TBL_Y, cols: COLS, vRules: true,
+          header: { h: HEAD_H, cells: ['المستوى', 'الشهادة', 'موضوع 2026'] },
+          rows: [
+            { h: ROW_H, at: 40, cells: [
+              [{ text: 'الرابعة', role: 'huge', size: 96 }, { text: 'متوسط', role: 'huge', size: 96 }],
+              [{ text: 'شهادة التعليم', role: 'small', size: 34 }, { text: 'المتوسط', role: 'small', size: 34 }, { text: 'bem', role: 'small', size: 34, align: 'right' }],
+              null,
+            ] },
+            { h: ROW_H, at: 64, cells: [
+              [{ text: 'الثالثة', role: 'huge', size: 96 }, { text: 'ثانوي', role: 'huge', size: 96 }],
+              [{ text: 'البكالوريا', role: 'small', size: 34 }, { text: 'bac', role: 'small', size: 34, align: 'right' }],
+              null,
+            ] },
+          ],
+        }),
+        thumb(PAPERS.bemMath, 'bem 2026 · رياضيات', 'bem 2026', 0, 50, -3),
+        thumb(PAPERS.bacMath, 'bac 2026 · رياضيات', 'bac 2026', 1, 74, 2),
+        { text: 'بجميع الشعب', role: 'small', motion: 'wipe', at: 144, y: 1392, align: 'right' },
       ],
     },
-    // 13–20s · «في جميع المواد: …»
+    // 14–18.5 s · «الرياضيات، الفيزياء، اللغات… وجميع المواد الأخرى» — real BAC 2026 papers
     {
-      from: 390, duration: 210,
+      from: 420, duration: 135, theme: 'inside', transitionIn: 'push', push: 0.035,
       els: [
-        masthead,
-        { text: 'في جميع المواد', role: 'small', motion: 'rise', at: 0, y: 200, align: 'right' },
-        { kind: 'rule', y: 300, at: 4, from: 'left' },
-        { kind: 'rule', y: 470, at: 10, from: 'right' },
-        { kind: 'rule', y: 840, at: 14, from: 'left' },
-        ...subjectEls,
-        { kind: 'rule', y: 1100, at: 18, from: 'right' },
-        { text: '…وغيرها', role: 'small', motion: 'wipe', at: 176, y: 1150, align: 'right' },
+        { text: 'المواد', role: 'small', at: 14, y: 120, align: 'right' },
+        { text: 'bac 2026 · sciences exp.', role: 'small', at: 16, y: 120, align: 'left' },
+        { text: 'الرياضيات', role: 'huge', motion: 'rise', at: 12, out: 36, y: 255, max: 280, align: 'right' },
+        { text: 'الفيزياء', role: 'huge', motion: 'rise', at: 42, out: 66, y: 255, max: 280, align: 'right' },
+        { text: 'اللغات', role: 'huge', motion: 'rise', at: 72, y: 255, max: 280, align: 'right' },
+        { kind: 'rule', y: 585, at: 14, from: 'left' },
+        sheet(PAPERS.bacMath, 'bac 2026 · رياضيات', 'bac 2026 · maths', 14, 230, 622, -4, 'right'),
+        sheet(PAPERS.bacPhys, 'bac 2026 · فيزياء', 'bac 2026 · physique', 44, 270, 618, 3, 'left'),
+        sheet(PAPERS.bacEng, 'bac 2026 · إنجليزية', 'bac 2026 · anglais', 74, 250, 626, -1.5, 'right'),
+        { text: 'وجميع المواد الأخرى', role: 'small', motion: 'wipe', at: 96, y: 1428, align: 'right' },
       ],
     },
-    // 20–25s · «مراجعة مركّزة، أساتذة مختصّون، وتحضير جدّي…»
+    // 18.5–23.5 s · «مراجعة شاملة، حلّ مواضيع السنوات السابقة، وامتحانات تجريبية»
     {
-      from: 600, duration: 150,
+      from: 555, duration: 150, theme: 'inside', transitionIn: 'push', drift: 8,
       els: [
-        masthead,
-        { text: 'لماذا عنبر؟', role: 'small', motion: 'rise', at: 0, y: 200, align: 'right' },
-        { kind: 'rule', y: 300, at: 4, from: 'right' },
-        { text: 'مراجعة مركزة', role: 'huge', motion: 'wipe', at: 24, y: 330, max: 270, align: 'right' },
-        { kind: 'rule', y: 580, at: 30, from: 'left' },
-        { text: 'أساتذة مختصون', role: 'huge', motion: 'wipe', at: 60, y: 650, max: 270, align: 'left' },
-        { kind: 'rule', y: 900, at: 66, from: 'right' },
-        { text: 'تحضير جدي', role: 'huge', motion: 'wipe', at: 96, y: 970, max: 270, align: 'right' },
-        { kind: 'rule', y: 1220, at: 102, from: 'left' },
-        { text: 'bem · bac', role: 'small', motion: 'rise', at: 116, y: 1320, align: 'left' },
+        { text: 'طريقتنا', role: 'small', at: 14, y: 150, align: 'right' },
+        { text: 'anber school', role: 'small', at: 16, y: 150, align: 'left' },
+        ...table({
+          at: 12, y: 220, cols: [782, 170], vRules: true,
+          rows: [
+            { h: 150, at: 14, cells: [{ text: 'مراجعة شاملة', role: 'huge', size: 84, max: 84 }, { text: '01', role: 'huge', size: 96, align: 'left' }] },
+            { h: 150, at: 38, cells: [{ text: 'حل مواضيع السنوات السابقة', role: 'huge', size: 84, max: 84 }, { text: '02', role: 'huge', size: 96, align: 'left' }] },
+            { h: 150, at: 88, cells: [{ text: 'امتحانات تجريبية', role: 'huge', size: 84, max: 84 }, { text: '03', role: 'huge', size: 96, align: 'left' }] },
+          ],
+        }),
+        ...fan,
+        { text: 'المواضيع: الديوان الوطني للامتحانات والمسابقات · دورة جوان 2026', role: 'small', size: 22, color: 'dim', at: 110, y: 1330 },
       ],
     },
-    // 25–30s · «الأماكن محدودة… سجّل الآن! مدرسة عنبر… اصنع المجد لنفسك» — last word in slices, 1.5s hold
+    // 23.5–30 s · «سجّل الآن في مدرسة عنبر بسيدي محمد بن علي… اصنع المجد لنفسك» — back cover, 1.5 s hold
     {
-      from: 750, duration: 150,
+      from: 705, duration: 195, theme: 'cover', transitionIn: 'diagonal',
       els: [
-        { kind: 'image', src: 'anber-mark-white.png', at: 0, y: 100, height: 170, align: 'center' },
-        { kind: 'rule', y: 300, at: 4, from: 'right' },
-        { text: 'الأماكن محدودة', role: 'small', motion: 'rise', at: 6, y: 320, align: 'right' },
-        { text: 'سجل الآن', role: 'huge', motion: 'rise', at: 14, y: 390, max: 330, align: 'center' },
-        { kind: 'rule', y: 690, at: 22, from: 'left' },
-        { text: '0792 19 94 29', role: 'small', motion: 'rise', at: 34, y: 790, align: 'left' },
-        { text: '0772 07 80 41', role: 'small', motion: 'rise', at: 40, y: 790, align: 'right' },
-        { text: 'اصنع المجد لنفسك', role: 'small', motion: 'rise', at: 48, y: 860, align: 'right' },
-        { text: 'سيدي محمد بن علي', role: 'small', motion: 'rise', at: 54, y: 860, align: 'left' },
-        { kind: 'rule', y: 960, at: 58, from: 'right' },
-        { text: 'عنبر', role: 'huge', motion: 'slices', at: 64, lock: 22, y: 980, max: 460, align: 'center' },
-        // slices lock ~frame 86, settle by ~100 → hold to 150 (≥ 1.5 s)
+        { kind: 'image', src: 'anber-logo-gold.png', at: 10, y: 90, height: 210, align: 'center' },
+        { kind: 'rule', y: 330, at: 18, from: 'right' },
+        { text: 'الأماكن محدودة', role: 'small', size: 44, at: 22, y: 352, align: 'right' },
+        { text: 'inscriptions ouvertes', role: 'small', size: 38, at: 26, y: 357, align: 'left' },
+        { text: 'سجل الآن', role: 'huge', motion: 'rise', at: 28, y: 430, max: 330, align: 'center' },
+        { kind: 'rule', y: 745, at: 36, from: 'left' },
+        { text: '0792 19 94 29', role: 'small', at: 48, y: 830, align: 'left' },
+        { text: '0772 07 80 41', role: 'small', at: 54, y: 830, align: 'right' },
+        { text: 'سيدي محمد بن علي', role: 'small', at: 62, y: 905, align: 'right' },
+        { text: 'اصنع المجد لنفسك', role: 'small', at: 72, y: 905, align: 'left' },
+        { kind: 'rule', y: 1000, at: 96, from: 'right', kick: 122 },
+        { text: 'عنبر', role: 'huge', motion: 'slices', at: 100, lock: 22, y: 1020, max: 430, align: 'center' },
+        // slices lock at 122, settle by ~135 → hold to 195 (≥ 1.5 s)
       ],
     },
   ],
-  // reserved for the SFX pass (to be designed line by line with the user)
-  cues: [],
+  cues: [], // SFX pass comes next
 };

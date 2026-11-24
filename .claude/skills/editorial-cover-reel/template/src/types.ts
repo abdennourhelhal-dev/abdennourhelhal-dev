@@ -1,73 +1,109 @@
-import type { Role } from './theme';
+import type { Palette, Role } from './theme';
 
 /**
  * Motion vocabulary (no fades — every reveal is a mask, clip or move):
  *  rise   letters rise through a baseline mask with spring overshoot
- *  snap   starts huge at screen centre, then snaps down into its small kicker slot with motion blur
- *  wipe   slanted clip wipe with a thin white line riding the edge
+ *         (Latin per letter; Arabic per sub-word, split at non-joining letters)
+ *  snap   starts huge at screen centre, anticipates, snaps into its small slot with blur, settles
+ *  wipe   slanted clip wipe; a thin line leads the edge and exits past the word
  *  under  slides out from under the element above (clip edge = `under` y)
- *  slices four horizontal slices land off-register, then lock
+ *  slices four horizontal slices fly in (blurred), land off-register, then lock
  *  cut    hard cut on
+ * Any element can leave with `out` (scene frame): text sinks under its mask, rules retract,
+ * papers slide away.
  */
 export type Motion = 'rise' | 'snap' | 'wipe' | 'under' | 'slices' | 'cut';
 export type Align = 'left' | 'right' | 'center';
 
-export type TextEl = {
+type Base = { at: number; until?: number; out?: number; outDur?: number };
+
+export type TextEl = Base & {
   kind?: 'text';
   text: string;
   role: Role;
-  /** frame (relative to scene start) the motion begins */
-  at: number;
-  /** optional hard-cut-off frame (relative to scene) */
-  until?: number;
-  /** top of the text row, px */
-  y: number;
-  /** font size px; for huge words prefer `max` + auto-fit */
+  y: number; // top of the text row
   size?: number;
-  /** auto-fit: largest size up to `max` that fits the width */
-  max?: number;
-  /** max width for auto-fit (default full width minus margins) */
-  width?: number;
+  max?: number; // auto-fit up to this size
+  width?: number; // auto-fit width (default: column width)
+  x0?: number; // column box (default PAD .. W-PAD)
+  x1?: number;
   align?: Align;
   motion?: Motion;
-  /** snap: frames spent huge before snapping; centre y of the huge state */
-  hold?: number;
-  hugeY?: number;
-  /** under: canvas y of the clipping edge (bottom of the word above) */
-  under?: number;
-  /** slices: frame (relative to `at`) when the slices lock into register */
-  lock?: number;
+  color?: string; // palette token or CSS colour
+  hold?: number; // snap
+  hugeY?: number; // snap
+  under?: number; // under
+  lock?: number; // slices
 };
 
-export type RuleEl = {
+export type RuleEl = Base & {
   kind: 'rule';
   y: number;
-  at: number;
-  until?: number;
   x0?: number;
   x1?: number;
-  /** draw direction */
   from?: 'left' | 'right';
+  vertical?: boolean; // vertical rule at x, from y to y1
+  x?: number;
+  y1?: number;
+  kick?: number; // scene frame: small settle wobble (e.g. when slices lock)
+  color?: string;
 };
 
-export type ImageEl = {
+export type RectEl = Base & {
+  kind: 'rect';
+  x: number; y: number; w: number; h: number;
+  fill?: string; // default accent
+  from?: 'left' | 'right' | 'top' | 'bottom';
+  dur?: number;
+};
+
+export type BoxEl = Base & {
+  kind: 'box';
+  x: number; y: number; w: number; h: number;
+  stroke?: string; // default small-type colour
+  width?: number;
+  dur?: number;
+};
+
+export type ImageEl = Base & {
   kind: 'image';
   src: string; // file in /public
-  at: number;
-  until?: number;
   y: number;
   height: number;
   align?: Align;
   motion?: 'rise' | 'cut';
 };
 
-export type El = TextEl | RuleEl | ImageEl;
+export type PaperEl = Base & {
+  kind: 'paper';
+  src?: string | null; // page image in /public; null -> clearly-labelled placeholder sheet
+  label: string; // placeholder caption / alt
+  x: number; y: number; w: number; // sheet box (A4 ratio)
+  rot?: number; // resting rotation (deg)
+  from?: 'left' | 'right' | 'bottom';
+  tag?: string; // small chip, e.g. "bac 2026\nmaths" (\n = two lines)
+  tagSide?: 'left' | 'right'; // corner of the chip (use 'right' when sheets overlap right→left)
+  callout?: { x: number; y: number; w: number; h: number; at: number }; // fractions of the sheet
+};
 
-export type Scene = { from: number; duration: number; els: El[] };
+export type El = TextEl | RuleEl | RectEl | BoxEl | ImageEl | PaperEl;
+
+export type Transition = 'cut' | 'slideUp' | 'push' | 'diagonal';
+
+export type Scene = {
+  from: number;
+  duration: number;
+  theme?: 'cover' | 'inside';
+  transitionIn?: Transition;
+  transitionFrames?: number;
+  drift?: number; // px of slow upward drift across the scene (living hold)
+  push?: number; // slow camera push (scale delta across the scene)
+  els: El[];
+};
 
 export type CoverConfig = {
   durationInFrames: number;
+  palettes?: { cover?: Palette; inside?: Palette };
   scenes: Scene[];
-  /** reserved for SFX: [frame, sfxName] — not rendered yet */
-  cues?: [number, string][];
+  cues?: [number, string][]; // reserved for SFX
 };

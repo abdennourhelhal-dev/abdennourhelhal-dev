@@ -22,3 +22,13 @@ Edit texts/timing in `src/index.html` (GSAP timeline). `node src/render.js still
 (+ Instrument Serif Italic / Schibsted Grotesk Black for Latin), no fades, bottom fifth empty.
 - Output: `editorial/out/anber-winter-editorial-30s.mp4` (silent — script and SFX to be refined)
 - Edit `editorial/src/cover.config.ts`, then `cd editorial && npm i && npx remotion render src/index.ts Cover out/anber-winter-editorial-30s.mp4`
+
+## v3 (school identity + data)
+`editorial/out/anber-winter-v3-30s.mp4`: navy/gold cover intro and outro (colours sampled from the
+logo card), cream "inside pages" in the middle:
+- official winter break 2026/2027 calendar (17 Dec 2026 evening → 3 Jan 2027 morning, decision no. 41)
+- levels table (4AM → BEM, 3AS → BAC)
+- real BAC 2026 / BEM 2026 first pages (placeholders until `public/papers/*.png` and `src/papers.ts` are filled)
+
+Timings follow `script.md` v2. Real papers: put page 1 PNGs in `editorial/public/papers/` and set
+their file names in `editorial/src/papers.ts`, then re-render.
