@@ -15,3 +15,10 @@ ffmpeg -framerate 30 -i /tmp/frames/f_%05d.jpg -i sfx/sfx_track.wav -c:v libx264
   -pix_fmt yuv420p -c:a aac -b:a 192k -shortest out/anber-winter-30s.mp4
 ```
 Edit texts/timing in `src/index.html` (GSAP timeline). `node src/render.js stills <dir> 6.4 12.3` grabs single frames.
+
+## Editorial (blue cover) version
+`editorial/` is the same reel rebuilt in Remotion with the `editorial-cover-reel` skill
+(`.claude/skills/editorial-cover-reel/`): flat #2433F0, white type, Amiri Italic / Cairo 900
+(+ Instrument Serif Italic / Schibsted Grotesk Black for Latin), no fades, bottom fifth empty.
+- Output: `editorial/out/anber-winter-editorial-30s.mp4` (silent — script and SFX to be refined)
+- Edit `editorial/src/cover.config.ts`, then `cd editorial && npm i && npx remotion render src/index.ts Cover out/anber-winter-editorial-30s.mp4`
