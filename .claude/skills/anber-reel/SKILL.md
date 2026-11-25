@@ -56,6 +56,17 @@ paper callouts) · `ticks` (calendar digits) · `tick` (phones) · `tap` (key wo
 so the mix peaks around −10 dBFS and the client's voice sits on top. Deliver the SFX-only stem too:
 `ffmpeg -i out/reel.mp4 -vn -c:a pcm_s16le out/reel-sfx-stem.wav`.
 
+## Voice-over (client records, Claude applies)
+1. Give the client the script **line by line** (فصحى, key words vocalised, a target length per line) and
+   ask for **one file per line** (any format; a line may be split over two files).
+2. Prepare: `python3 -I scripts/prep_voice.py public/vo line1.mp3 line2.mp3 …` → `vo1.wav…` trimmed,
+   cleaned, −16 LUFS; it prints each clip's length in frames. `silencedetect` gives the phrase starts.
+3. **Time the video to the voice, not the voice to the video:** each scene = 6 frames lead + clip + 6
+   frames gap; put every visual beat on its spoken phrase; keep the voice natural (no speed-up) even if
+   the reel grows past 30 s (the winter reel became ≈ 38 s). Final hold ≈ 1.3 s after the last word.
+4. `config.voice = [[frame, 'vo1'], …]`; move every SFX cue into the gaps / onto the new beats, a bit
+   lower than without voice. Check: integrated ≈ −16 LUFS, onsets match the voice frames.
+
 ## Workflow
 1. **Brief** — ask the user (to relay to the teacher) whatever is missing: dates, levels and subjects,
    prices/discounts, schedule, how to register, selling points they can actually back up, deadline,

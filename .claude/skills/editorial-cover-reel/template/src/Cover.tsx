@@ -88,6 +88,12 @@ export const Cover: React.FC = () => {
           <Audio src={staticFile(`sfx/${name}.wav`)} volume={volume ?? 1} />
         </Sequence>
       ))}
+      {/* voice-over: one clip per script line (files in public/vo), scenes are timed to it */}
+      {(config.voice ?? []).map(([at, name, volume], i) => (
+        <Sequence key={`vo-${i}`} from={at} layout="none">
+          <Audio src={staticFile(`vo/${name}.wav`)} volume={volume ?? 1} />
+        </Sequence>
+      ))}
     </AbsoluteFill>
   );
 };

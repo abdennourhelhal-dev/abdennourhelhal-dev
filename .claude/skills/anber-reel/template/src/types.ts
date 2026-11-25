@@ -112,4 +112,5 @@ export type CoverConfig = {
   tempo?: Tempo; // 'punchy' (default) | 'calm'
   scenes: Scene[];
   cues?: [number, string, number?][]; // SFX: [frame, file in public/sfx without .wav, volume 0-1]
+  voice?: [number, string, number?][]; // voice-over clips: [frame, file in public/vo without .wav, volume]
 };

@@ -39,3 +39,8 @@ in slowly and simply, rules draw slowly; gentle opening snap and closing slices)
 first pages of BAC 2026 (sciences exp.: maths, physique, anglais) and BEM 2026 (maths, physique) in
 `editorial/public/papers/`, with gold callouts on each exam header. The subjects scene is now a
 3-row list with each real paper arriving on its word.
+
+## Final (client voice-over)
+`editorial/out/anber-winter-final-voice.mp4` (≈ 38.3 s): v7 re-timed to the client's recorded voice
+(7 clips in `editorial/public/vo/`, prepared with `scripts/prep_voice.py`), soft SFX underneath,
+calendar simplified to "courses throughout the winter break" (official dates only).
