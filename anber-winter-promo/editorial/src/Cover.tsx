@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame } from 'remotion';
 import { Element, layerOf } from './motion/Element';
 import { Accum, clamp01, easeInOut, poly } from './motion/helpers';
 import { PaletteCtx } from './palette';
@@ -82,6 +82,12 @@ export const Cover: React.FC = () => {
         return <SceneLayer key={i} scene={s} next={next} sf={sf} />;
       })}
       </TempoCtx.Provider>
+      {/* sound effects: one Audio per cue (files in public/sfx); no music in this style */}
+      {(config.cues ?? []).map(([at, name, volume], i) => (
+        <Sequence key={`sfx-${i}`} from={at} layout="none">
+          <Audio src={staticFile(`sfx/${name}.wav`)} volume={volume ?? 1} />
+        </Sequence>
+      ))}
     </AbsoluteFill>
   );
 };

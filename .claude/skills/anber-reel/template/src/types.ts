@@ -75,6 +75,8 @@ export type ImageEl = Base & {
   align?: Align;
   motion?: 'rise' | 'cut' | 'slices'; // slices: e.g. a logo as the final lockup
   lock?: number; // slices
+  zoom?: number; // rise: start scale that settles to 1 (e.g. 1.08) — smooth logo reveal
+  dur?: number; // rise: frames (calm default 30)
 };
 
 export type PaperEl = Base & {
@@ -109,5 +111,5 @@ export type CoverConfig = {
   palettes?: { cover?: Palette; inside?: Palette };
   tempo?: Tempo; // 'punchy' (default) | 'calm'
   scenes: Scene[];
-  cues?: [number, string][]; // reserved for SFX
+  cues?: [number, string, number?][]; // SFX: [frame, file in public/sfx without .wav, volume 0-1]
 };

@@ -103,12 +103,14 @@ export const ImageElement: React.FC<{ el: ImageEl; f: number; exit: number }> = 
   const justify = el.align === 'left' ? 'flex-start' : el.align === 'right' ? 'flex-end' : 'center';
   const calm = useTempo() === 'calm';
   if (el.motion === 'slices' && exit === 0) return <ImageSlices el={el} f={f} calm={calm} />;
-  const inP = calm ? calmEase(clamp01(f / CALM.slide)) : osc(f);
+  // rise: up through the line mask; optional gentle zoom settle (smooth logo reveal, no fade)
+  const inP = calm || el.dur ? calmEase(clamp01(f / (el.dur ?? 30))) : osc(f);
   const y = el.motion === 'cut' ? 0 : (1 - inP) * el.height * 1.05 + easeIn(exit) * el.height * 1.05;
+  const scale = el.motion === 'cut' || !el.zoom ? 1 : el.zoom + (1 - el.zoom) * inP;
   return (
     <div style={{ position: 'absolute', left: 0, top: el.y, width: W, height: el.height,
       clipPath: poly([[-100, -el.height], [W + 100, -el.height], [W + 100, el.height], [-100, el.height]]) }}>
-      <div style={{ display: 'flex', justifyContent: justify, padding: `0 ${PAD}px`, transform: `translateY(${y}px)` }}>
+      <div style={{ display: 'flex', justifyContent: justify, padding: `0 ${PAD}px`, transform: `translateY(${y}px) scale(${scale})`, transformOrigin: '50% 50%' }}>
         <Img src={staticFile(el.src)} style={{ height: el.height }} />
       </div>
     </div>

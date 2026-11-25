@@ -164,25 +164,42 @@ export const config: CoverConfig = {
         { text: 'المواضيع: الديوان الوطني للامتحانات والمسابقات · دورة جوان 2026 · eddirasa.com', role: 'small', size: 22, color: 'dim', at: 110, y: 1330 },
       ],
     },
-    // 23.5–30 s · «سجّل الآن في مدرسة عنبر بسيدي محمد بن علي… اصنع المجد لنفسك وتميّز» — back cover, 1.5 s hold
+    // 23.5–30 s · «سجّل الآن حضوريًا أو عبر الهاتف، بمبلغ رمزي… مدرسة عنبر، اصنع المجد لنفسك وتميّز» — back cover, 1.5 s hold
     {
       from: 705, duration: 195, theme: 'cover', transitionIn: 'diagonal',
       els: [
-        { text: 'الأماكن محدودة', role: 'small', size: 44, at: 16, y: 130, align: 'right' },
-        { text: 'inscriptions ouvertes', role: 'small', size: 38, at: 20, y: 135, align: 'left' },
-        { kind: 'rule', y: 230, at: 18, from: 'right' },
-        { text: 'سجل الآن', role: 'huge', motion: 'rise', at: 24, y: 250, max: 330, align: 'center' },
-        { kind: 'rule', y: 560, at: 32, from: 'left' },
-        { text: '0792 19 94 29', role: 'small', at: 40, y: 640, align: 'left' },
-        { text: '0772 07 80 41', role: 'small', at: 46, y: 640, align: 'right' },
-        { text: 'سيدي محمد بن علي', role: 'small', at: 54, y: 712, align: 'center' },
-        { kind: 'rule', y: 805, at: 62, from: 'right' },
-        // final lockup: the school logo assembles from four gentle slices, then the school slogan
-        { kind: 'image', src: 'anber-logo-gold.png', motion: 'slices', at: 70, lock: 44, y: 840, height: 430, width: 495, align: 'center' },
-        { text: 'اصنع المجد لنفسك وتميز', role: 'huge', at: 116, y: 1315, max: 104, align: 'center' },
-        // logo locks by 128, slogan settles by 140 (frame 845) → final hold ≥ 1.5 s
+        { text: 'الأماكن محدودة', role: 'small', size: 44, at: 16, y: 120, align: 'right' },
+        { text: 'بمبلغ رمزي', role: 'small', size: 44, color: 'accent', at: 60, y: 120, align: 'left' },
+        { kind: 'rule', y: 220, at: 18, from: 'right' },
+        { text: 'سجل الآن', role: 'huge', motion: 'rise', at: 24, y: 240, max: 330, align: 'center' },
+        { kind: 'rule', y: 550, at: 32, from: 'left' },
+        { text: 'التسجيل حضوريًا أو عبر الهاتف', role: 'small', size: 44, at: 40, y: 648, align: 'center' },
+        { text: '0792 19 94 29', role: 'small', at: 48, y: 716, align: 'left' },
+        { text: '0772 07 80 41', role: 'small', at: 54, y: 716, align: 'right' },
+        { text: 'سيدي محمد بن علي', role: 'small', size: 40, at: 62, y: 790, align: 'center' },
+        { kind: 'rule', y: 860, at: 68, from: 'right' },
+        // final lockup: the gold school logo rises smoothly with a gentle zoom settle, then the slogan
+        { kind: 'image', src: 'anber-logo-gold.png', motion: 'rise', zoom: 1.08, dur: 30, at: 80, y: 885, height: 380, align: 'center' },
+        { text: 'اصنع المجد لنفسك وتميز', role: 'huge', at: 112, y: 1300, max: 104, align: 'center' },
+        // logo settles by 110, slogan by 136 (frame 841) → final hold ≥ 1.5 s
       ],
     },
   ],
-  cues: [], // SFX pass comes next
+  // soft sound effects (no music) — [frame, public/sfx/<name>.wav, volume]; kept low under the voice
+  cues: [
+    // intro
+    [36, 'swoosh_s', 0.3], [50, 'tap', 0.38],
+    // page changes
+    [90, 'swoosh', 0.35], [240, 'swoosh', 0.32], [420, 'swoosh', 0.32], [555, 'swoosh', 0.32], [705, 'swoosh', 0.36],
+    // calendar: digits roll in, gold winter-break band
+    [122, 'ticks', 0.28], [172, 'marker', 0.3],
+    // levels table: paper thumbnails, gold level highlights
+    [290, 'paper', 0.35], [314, 'paper', 0.35], [324, 'marker', 0.28], [357, 'marker', 0.28],
+    // subjects: each real sheet slides in, then its header callout
+    [430, 'paper', 0.42], [448, 'marker', 0.2], [460, 'paper', 0.42], [478, 'marker', 0.2], [490, 'paper', 0.42], [508, 'marker', 0.2],
+    // method: five sheets fan out
+    [599, 'paper', 0.24], [606, 'paper', 0.22], [613, 'paper', 0.22], [620, 'paper', 0.22], [627, 'paper', 0.24],
+    // outro
+    [729, 'tap', 0.4], [753, 'tick', 0.32], [759, 'tick', 0.32], [785, 'chime', 0.34], [817, 'air', 0.22],
+  ],
 };

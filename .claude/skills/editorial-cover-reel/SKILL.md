@@ -91,7 +91,9 @@ Authoring notes
 - One cover/page per voice-over line; time beats to the stressed words of the script.
 - Real documents only from real sources (state the source in a small `dim` line); until the file
   exists, `src: null` renders a clearly-labelled placeholder sheet.
-- `cues` is reserved for SFX `[frame, name]` (no music unless asked).
+- Sound: `cues: [frame, name, volume]` plays `public/sfx/<name>.wav` at that frame (rendered into the MP4).
+  Keep SFX soft and sparse (no music unless asked). Images: `motion:'rise'` + `zoom` (e.g. 1.08) + `dur`
+  gives a smooth logo reveal; `motion:'slices'` (+ `width`) assembles an image from four bands.
 
 ## Render (this cloud image)
 ```bash

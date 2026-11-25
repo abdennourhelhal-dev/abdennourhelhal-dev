@@ -29,8 +29,11 @@ render. The engine is the editorial-cover engine with the school's palette and t
   (~24 frames, no bounce); rules draw slowly. Page transitions and papers keep their normal speed.
 - Editorial cover style only for the **intro and outro**; the middle is "inside pages" with **tables,
   data and real documents** (official calendar, real BAC/BEM papers) — never invented data.
-- Close on the **gold logo assembling from 4 gentle slices + the slogan** «اصنع المجد لنفسك وتميز»,
-  held ≥ 1.5 s. Latin text lowercase. No fades, no glow. Bottom fifth (y ≥ 1536) empty.
+- Close on the **gold logo rising smoothly with a gentle zoom settle** (`motion:'rise', zoom:1.08, dur:30`,
+  never slices — the client found them too "slide-like") **+ the slogan** «اصنع المجد لنفسك وتميز», held ≥ 1.5 s.
+  Latin text lowercase. No fades, no glow. Bottom fifth (y ≥ 1536) empty.
+- Always state how to register — **«التسجيل حضوريًا أو عبر الهاتف»** — and, for these courses, that the fee
+  is symbolic: **«بمبلغ رمزي»** (gold accent). Confirm both with the teacher for other announcements.
 - Do not name teachers unless the teacher confirms. Keep `[التاريخ]`-style placeholders visible until
   the teacher gives the missing info.
 
@@ -42,8 +45,16 @@ render. The engine is the editorial-cover engine with the school's palette and t
 | 8–14 s | cream page | table (`table()`): levels / certificates, real paper thumbnails, gold cell highlights |
 | 14–18.5 s | cream page | 3-row list (subjects) + real paper sheets arriving on each spoken word, gold header callout |
 | 18.5–23.5 s | cream page | numbered rows 01/02/03 + fanned real papers + source line |
-| 23.5–30 s | navy cover | «الأماكن محدودة» · «سجل الآن» · phones · address · logo slices · slogan · 1.5 s hold |
+| 23.5–30 s | navy cover | «الأماكن محدودة» + gold «بمبلغ رمزي» · «سجل الآن» · «التسجيل حضوريًا أو عبر الهاتف» · phones · address · logo smooth rise + gentle zoom · slogan · 1.5 s hold |
 Transitions: `slideUp` (cover → page), `push` (page → page), `diagonal` (page → cover).
+
+## Sound effects (soft, no music)
+`scripts/make_sfx.py` synthesises the bank into `public/sfx/` (numpy, run with `python3 -I`):
+`swoosh` (page changes) · `swoosh_s` (opening snap) · `paper` (each exam sheet) · `marker` (gold bands,
+paper callouts) · `ticks` (calendar digits) · `tick` (phones) · `tap` (key words: hook, «سجل الآن») ·
+`chime` (logo) · `air` (slogan). Cue them in `config.cues` as `[frame, name, volume]`, volumes 0.2–0.42,
+so the mix peaks around −10 dBFS and the client's voice sits on top. Deliver the SFX-only stem too:
+`ffmpeg -i out/reel.mp4 -vn -c:a pcm_s16le out/reel-sfx-stem.wav`.
 
 ## Workflow
 1. **Brief** — ask the user (to relay to the teacher) whatever is missing: dates, levels and subjects,
