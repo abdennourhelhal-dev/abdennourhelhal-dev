@@ -178,9 +178,12 @@ export const config: CoverConfig = {
         { text: '0772 07 80 41', role: 'small', at: 50, y: 830, align: 'right' },
         { text: 'سيدي محمد بن علي', role: 'small', at: 56, y: 905, align: 'right' },
         { text: 'اصنع المجد لنفسك', role: 'small', at: 64, y: 905, align: 'left' },
-        { kind: 'rule', y: 1000, at: 84, from: 'right' },
-        { text: 'عنبر', role: 'huge', motion: 'slices', at: 92, lock: 40, y: 1020, max: 430, align: 'center' },
-        // gentle slices: in by 92+38, lock 132–146 (frame 851) → final hold ≥ 1.5 s
+        { kind: 'rule', y: 990, at: 80, from: 'right' },
+        // full school name in Latin (lowercase, as the style requires), two lines, gentle slices
+        { text: 'anber school', role: 'huge', motion: 'slices', at: 86, lock: 40, y: 1005, max: 190, align: 'center' },
+        { kind: 'rule', y: 1180, at: 90, from: 'left' },
+        { text: 'of excellence', role: 'huge', motion: 'slices', at: 94, lock: 40, y: 1215, max: 190, align: 'center' },
+        // last line locks 134–148 (frame 853) → final hold ≥ 1.5 s
       ],
     },
   ],
