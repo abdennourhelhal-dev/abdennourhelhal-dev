@@ -3,7 +3,8 @@ import { PAD, ROLE, SMALL_SIZE, W } from '../theme';
 import { fit, isArabic, measure, prep } from '../text';
 import { resolveColor, usePalette } from '../palette';
 import type { TextEl } from '../types';
-import { Accum, clamp01, easeIn, easeInOut, easeOut, osc, poly, snapEase } from './helpers';
+import { Accum, calmEase, clamp01, easeIn, easeInOut, easeOut, osc, poly, snapEase } from './helpers';
+import { CALM, useTempo } from './tempo';
 
 export type Geo = { text: string; size: number; w: number; rowH: number; x0: number; rtl: boolean; colL: number; colR: number };
 
@@ -215,8 +216,81 @@ const Snap: React.FC<{ el: TextEl; g: Geo; f: number }> = ({ el, g, f }) => {
 };
 
 // ---------------------------------------------------------------------------
+// calm tempo ("very simple"): the whole line slides up once through its mask, slowly,
+// no bounce, no cascade; gentle snap and slices without blur
+// ---------------------------------------------------------------------------
+const baselineClip = (g: Geo) => {
+  const { maskY } = maskOf(g);
+  return poly([[-200, -g.rowH * 1.5], [W + 200, -g.rowH * 1.5], [W + 200, maskY], [-200, maskY]]);
+};
+const Slide: React.FC<{ el: TextEl; g: Geo; f: number }> = ({ el, g, f }) => {
+  const { maskY } = maskOf(g);
+  const p = calmEase(clamp01(f / CALM.slide));
+  return (
+    <div style={{ position: 'absolute', inset: 0, clipPath: baselineClip(g) }}>
+      <Glyphs el={el} g={g} style={{ transform: `translateY(${(1 - p) * (maskY + g.size * 0.12)}px)` }} />
+    </div>
+  );
+};
+const CalmSink: React.FC<{ el: TextEl; g: Geo; e: number }> = ({ el, g, e }) => {
+  const { maskY } = maskOf(g);
+  return (
+    <div style={{ position: 'absolute', inset: 0, clipPath: baselineClip(g) }}>
+      <Glyphs el={el} g={g} style={{ transform: `translateY(${easeInOut(e) * (maskY + g.size * 0.12)}px)` }} />
+    </div>
+  );
+};
+const CalmSnap: React.FC<{ el: TextEl; g: Geo; f: number }> = ({ el, g, f }) => {
+  const hold = el.hold ?? 30;
+  const k = Math.min(940 / g.w, 8);
+  const fx = g.x0 + g.w / 2, fy = el.y + g.rowH / 2;
+  const cx = W / 2, cy = el.hugeY ?? 760;
+  const p = easeInOut(clamp01((f - hold) / CALM.snapMove));
+  const sc = k + (1 - k) * p;
+  return (
+    <Row y={el.y} h={g.rowH} style={{ transform: `translate(${(cx - fx) * (1 - p)}px, ${(cy - fy) * (1 - p)}px) scale(${sc})`, transformOrigin: `${fx}px ${g.rowH / 2}px` }}>
+      <Slide el={el} g={g} f={f} />
+    </Row>
+  );
+};
+const CalmSlices: React.FC<{ el: TextEl; g: Geo; f: number }> = ({ el, g, f }) => {
+  const lock = el.lock ?? 40;
+  const m = g.size * 0.25; // window margin covers the italic overhang
+  const L = g.x0 - m, R = g.x0 + g.w + m;
+  return (
+    <>
+      {[0, 1, 2, 3].map((i) => {
+        const a = i * CALM.sliceStagger;
+        if (f < a) return null;
+        const top = i === 0 ? -g.rowH : (g.rowH * i) / 4;
+        const bot = i === 3 ? g.rowH * 2 : (g.rowH * (i + 1)) / 4;
+        const side = i % 2 === 0 ? 1 : -1;
+        const resid = OFF[i] * g.size * 0.6;
+        const q = calmEase(clamp01((f - a) / CALM.sliceIn));
+        let x = side * (R - L) * (1 - q) + resid * q;
+        if (f >= lock) x = resid * (1 - easeInOut(clamp01((f - lock) / CALM.sliceLock)));
+        // each slice slides into the word's own window, entering through its edge
+        return (
+          <div key={i} style={{ position: 'absolute', inset: 0, clipPath: poly([[L, top], [R, top], [R, bot], [L, bot]]) }}>
+            <Glyphs el={el} g={g} style={{ transform: `translateX(${x}px)` }} />
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+// ---------------------------------------------------------------------------
 export const TextElement: React.FC<{ el: TextEl; f: number; exit: number }> = ({ el, f, exit }) => {
   const g = geometry(el);
+  const tempo = useTempo();
+  if (tempo === 'calm') {
+    if (exit > 0) return <Row y={el.y} h={g.rowH}><CalmSink el={el} g={g} e={exit} /></Row>;
+    const cm = el.motion ?? 'rise';
+    if (cm === 'snap') return <CalmSnap el={el} g={g} f={f} />;
+    const calmInner = cm === 'slices' ? <CalmSlices el={el} g={g} f={f} /> : cm === 'cut' ? <Glyphs el={el} g={g} /> : <Slide el={el} g={g} f={f} />;
+    return <Row y={el.y} h={g.rowH}>{calmInner}</Row>;
+  }
   if (exit > 0) return <Row y={el.y} h={g.rowH}><Sink el={el} g={g} e={exit} /></Row>;
   const m = el.motion ?? 'rise';
   if (m === 'snap') return <Snap el={el} g={g} f={f} />;

@@ -3,15 +3,17 @@ import { Img, staticFile } from 'remotion';
 import { PAD, RULE_THICKNESS, W } from '../theme';
 import { resolveColor, usePalette } from '../palette';
 import type { BoxEl, ImageEl, RectEl, RuleEl } from '../types';
-import { clamp01, easeIn, easeOut, osc, poly } from './helpers';
+import { calmEase, clamp01, easeIn, easeInOut, easeOut, osc, poly } from './helpers';
+import { CALM, useTempo } from './tempo';
 
 /** Rules draw in (scaleX / scaleY), can kick when something lands, retract on exit. */
 export const RuleElement: React.FC<{ el: RuleEl; f: number; sf: number; exit: number }> = ({ el, f, sf, exit }) => {
   const pal = usePalette();
   const color = resolveColor(pal, el.color, pal.rule);
-  const p = easeOut(clamp01(f / 9)) * (1 - easeIn(exit));
+  const calm = useTempo() === 'calm';
+  const p = (calm ? easeInOut(clamp01(f / CALM.rule)) : easeOut(clamp01(f / 9))) * (1 - easeIn(exit));
   let kick = 0;
-  if (el.kick !== undefined && sf >= el.kick) {
+  if (!calm && el.kick !== undefined && sf >= el.kick) {
     const u = sf - el.kick;
     kick = 7 * Math.exp(-u / 4) * Math.sin(u * 0.9);
   }
@@ -46,8 +48,9 @@ export const RectElement: React.FC<{ el: RectEl; f: number; exit: number }> = ({
 /** Outline box whose stroke draws around (callouts, ranges). */
 export const BoxElement: React.FC<{ el: BoxEl; f: number; exit: number }> = ({ el, f, exit }) => {
   const pal = usePalette();
+  const calm = useTempo() === 'calm';
   if (exit >= 1) return null;
-  const p = easeOut(clamp01(f / (el.dur ?? 12)));
+  const p = calm ? easeInOut(clamp01(f / Math.max(el.dur ?? 0, CALM.box))) : easeOut(clamp01(f / (el.dur ?? 12)));
   const sw = el.width ?? 4;
   return (
     <svg style={{ position: 'absolute', left: el.x - sw, top: el.y - sw, overflow: 'visible' }} width={el.w + sw * 2} height={el.h + sw * 2}>
@@ -59,7 +62,9 @@ export const BoxElement: React.FC<{ el: BoxEl; f: number; exit: number }> = ({ e
 
 export const ImageElement: React.FC<{ el: ImageEl; f: number; exit: number }> = ({ el, f, exit }) => {
   const justify = el.align === 'left' ? 'flex-start' : el.align === 'right' ? 'flex-end' : 'center';
-  const y = el.motion === 'cut' ? 0 : (1 - osc(f)) * el.height * 1.05 + easeIn(exit) * el.height * 1.05;
+  const calm = useTempo() === 'calm';
+  const inP = calm ? calmEase(clamp01(f / CALM.slide)) : osc(f);
+  const y = el.motion === 'cut' ? 0 : (1 - inP) * el.height * 1.05 + easeIn(exit) * el.height * 1.05;
   return (
     <div style={{ position: 'absolute', left: 0, top: el.y, width: W, height: el.height,
       clipPath: poly([[-100, -el.height], [W + 100, -el.height], [W + 100, el.height], [-100, el.height]]) }}>

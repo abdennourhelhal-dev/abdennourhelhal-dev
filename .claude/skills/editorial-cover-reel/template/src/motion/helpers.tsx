@@ -16,6 +16,7 @@ export const easeOut = Easing.bezier(0.16, 0.84, 0.2, 1); // expo-ish out
 export const easeIn = Easing.bezier(0.55, 0, 0.8, 0.2);
 export const easeInOut = Easing.bezier(0.83, 0, 0.17, 1); // page moves
 export const snapEase = Easing.bezier(0.7, 0, 0.15, 1);
+export const calmEase = Easing.bezier(0.25, 1, 0.5, 1); // soft ease-out, no overshoot
 
 export const poly = (pts: [number, number][]) => `polygon(${pts.map(([x, y]) => `${x}px ${y}px`).join(',')})`;
 

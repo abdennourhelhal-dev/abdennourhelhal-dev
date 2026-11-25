@@ -32,3 +32,10 @@ logo card), cream "inside pages" in the middle:
 
 Timings follow `script.md` v2. Real papers: put page 1 PNGs in `editorial/public/papers/` and set
 their file names in `editorial/src/papers.ts`, then re-render.
+
+## v4 (calm motion + real papers)
+`editorial/out/anber-winter-v4-30s.mp4`: same structure as v3 with `tempo: 'calm'` (text lines slide
+in slowly and simply, rules draw slowly; gentle opening snap and closing slices) and the **real**
+first pages of BAC 2026 (sciences exp.: maths, physique, anglais) and BEM 2026 (maths, physique) in
+`editorial/public/papers/`, with gold callouts on each exam header. The subjects scene is now a
+3-row list with each real paper arriving on its word.

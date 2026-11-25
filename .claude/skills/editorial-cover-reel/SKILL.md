@@ -50,6 +50,13 @@ Typical arc: **cover intro → inside pages → cover outro** ("magazine").
 | exits | any element: `out` (scene frame) → text sinks under its mask, rules/bands retract, papers slide away | 8–10 frames |
 | rules | draw with `scaleX`/`scaleY`; `kick` = small wobble when something lands | 9 frames |
 
+**Tempo** (`config.tempo`): `'punchy'` (default, everything above) or `'calm'` — "very simple":
+every text line slides up once through its baseline mask over 24 frames (soft ease-out, no bounce,
+no per-letter cascade; `rise`/`wipe`/`under` all become this slide), rules and outline boxes draw
+over 20 frames ease-in-out, snap moves gently over 18 frames and slices slide into the word's own
+window and lock slowly — no blur on text. Transitions, papers and accent bands are unchanged.
+Use calm when the client finds the motion too fast or flashy; leave ≈ 24 frames per text beat.
+
 **Scene transitions** (`transitionIn`, 14 frames, motion-blurred, never a fade):
 `slideUp` (next page slides up, accent rule on the leading edge — use cover → inside),
 `push` (RTL page turn — inside → inside), `diagonal` (slanted wipe with accent edge — inside → cover),

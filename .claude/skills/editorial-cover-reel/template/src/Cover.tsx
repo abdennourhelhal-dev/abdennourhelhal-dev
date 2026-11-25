@@ -3,6 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { Element, layerOf } from './motion/Element';
 import { Accum, clamp01, easeInOut, poly } from './motion/helpers';
 import { PaletteCtx } from './palette';
+import { TempoCtx } from './motion/tempo';
 import { ELECTRIC, H, W } from './theme';
 import { config } from './cover.config';
 import type { Scene } from './types';
@@ -73,12 +74,14 @@ export const Cover: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill style={{ background: '#000' }}>
+      <TempoCtx.Provider value={config.tempo ?? 'punchy'}>
       {config.scenes.map((s, i) => {
         const next = config.scenes[i + 1];
         const sf = frame - s.from;
         if (sf < 0 || sf >= s.duration + tFrames(next)) return null;
         return <SceneLayer key={i} scene={s} next={next} sf={sf} />;
       })}
+      </TempoCtx.Provider>
     </AbsoluteFill>
   );
 };

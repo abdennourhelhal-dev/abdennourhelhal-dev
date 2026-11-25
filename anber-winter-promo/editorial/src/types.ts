@@ -1,4 +1,5 @@
 import type { Palette, Role } from './theme';
+import type { Tempo } from './motion/tempo';
 
 /**
  * Motion vocabulary (no fades — every reveal is a mask, clip or move):
@@ -104,6 +105,7 @@ export type Scene = {
 export type CoverConfig = {
   durationInFrames: number;
   palettes?: { cover?: Palette; inside?: Palette };
+  tempo?: Tempo; // 'punchy' (default) | 'calm'
   scenes: Scene[];
   cues?: [number, string][]; // reserved for SFX
 };
