@@ -164,26 +164,23 @@ export const config: CoverConfig = {
         { text: 'المواضيع: الديوان الوطني للامتحانات والمسابقات · دورة جوان 2026 · eddirasa.com', role: 'small', size: 22, color: 'dim', at: 110, y: 1330 },
       ],
     },
-    // 23.5–30 s · «سجّل الآن في مدرسة عنبر بسيدي محمد بن علي… اصنع المجد لنفسك» — back cover, 1.5 s hold
+    // 23.5–30 s · «سجّل الآن في مدرسة عنبر بسيدي محمد بن علي… اصنع المجد لنفسك وتميّز» — back cover, 1.5 s hold
     {
       from: 705, duration: 195, theme: 'cover', transitionIn: 'diagonal',
       els: [
-        { kind: 'image', src: 'anber-logo-gold.png', at: 10, y: 90, height: 210, align: 'center' },
-        { kind: 'rule', y: 330, at: 18, from: 'right' },
-        { text: 'الأماكن محدودة', role: 'small', size: 44, at: 22, y: 352, align: 'right' },
-        { text: 'inscriptions ouvertes', role: 'small', size: 38, at: 26, y: 357, align: 'left' },
-        { text: 'سجل الآن', role: 'huge', motion: 'rise', at: 28, y: 430, max: 330, align: 'center' },
-        { kind: 'rule', y: 745, at: 36, from: 'left' },
-        { text: '0792 19 94 29', role: 'small', at: 44, y: 830, align: 'left' },
-        { text: '0772 07 80 41', role: 'small', at: 50, y: 830, align: 'right' },
-        { text: 'سيدي محمد بن علي', role: 'small', at: 56, y: 905, align: 'right' },
-        { text: 'اصنع المجد لنفسك', role: 'small', at: 64, y: 905, align: 'left' },
-        { kind: 'rule', y: 990, at: 80, from: 'right' },
-        // full school name in Latin (lowercase, as the style requires), two lines, gentle slices
-        { text: 'anber school', role: 'huge', motion: 'slices', at: 86, lock: 40, y: 1005, max: 190, align: 'center' },
-        { kind: 'rule', y: 1180, at: 90, from: 'left' },
-        { text: 'of excellence', role: 'huge', motion: 'slices', at: 94, lock: 40, y: 1215, max: 190, align: 'center' },
-        // last line locks 134–148 (frame 853) → final hold ≥ 1.5 s
+        { text: 'الأماكن محدودة', role: 'small', size: 44, at: 16, y: 130, align: 'right' },
+        { text: 'inscriptions ouvertes', role: 'small', size: 38, at: 20, y: 135, align: 'left' },
+        { kind: 'rule', y: 230, at: 18, from: 'right' },
+        { text: 'سجل الآن', role: 'huge', motion: 'rise', at: 24, y: 250, max: 330, align: 'center' },
+        { kind: 'rule', y: 560, at: 32, from: 'left' },
+        { text: '0792 19 94 29', role: 'small', at: 40, y: 640, align: 'left' },
+        { text: '0772 07 80 41', role: 'small', at: 46, y: 640, align: 'right' },
+        { text: 'سيدي محمد بن علي', role: 'small', at: 54, y: 712, align: 'center' },
+        { kind: 'rule', y: 805, at: 62, from: 'right' },
+        // final lockup: the school logo assembles from four gentle slices, then the school slogan
+        { kind: 'image', src: 'anber-logo-gold.png', motion: 'slices', at: 70, lock: 44, y: 840, height: 430, width: 495, align: 'center' },
+        { text: 'اصنع المجد لنفسك وتميز', role: 'huge', at: 116, y: 1315, max: 104, align: 'center' },
+        // logo locks by 128, slogan settles by 140 (frame 845) → final hold ≥ 1.5 s
       ],
     },
   ],

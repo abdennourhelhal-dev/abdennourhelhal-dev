@@ -71,8 +71,10 @@ export type ImageEl = Base & {
   src: string; // file in /public
   y: number;
   height: number;
+  width?: number; // needed for `slices` (rendered width at `height`)
   align?: Align;
-  motion?: 'rise' | 'cut';
+  motion?: 'rise' | 'cut' | 'slices'; // slices: e.g. a logo as the final lockup
+  lock?: number; // slices
 };
 
 export type PaperEl = Base & {

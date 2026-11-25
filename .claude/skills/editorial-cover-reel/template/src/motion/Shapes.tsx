@@ -3,7 +3,7 @@ import { Img, staticFile } from 'remotion';
 import { PAD, RULE_THICKNESS, W } from '../theme';
 import { resolveColor, usePalette } from '../palette';
 import type { BoxEl, ImageEl, RectEl, RuleEl } from '../types';
-import { calmEase, clamp01, easeIn, easeInOut, easeOut, osc, poly } from './helpers';
+import { Accum, calmEase, clamp01, easeIn, easeInOut, easeOut, osc, poly } from './helpers';
 import { CALM, useTempo } from './tempo';
 
 /** Rules draw in (scaleX / scaleY), can kick when something lands, retract on exit. */
@@ -60,9 +60,49 @@ export const BoxElement: React.FC<{ el: BoxEl; f: number; exit: number }> = ({ e
   );
 };
 
+// image slices (e.g. a logo as the final lockup): four horizontal bands slide into place,
+// land slightly off-register, then lock. Calm = slow, inside the image's own window, no blur.
+const IMG_OFF = [-0.11, 0.07, -0.05, 0.13];
+const ImageSlices: React.FC<{ el: ImageEl; f: number; calm: boolean }> = ({ el, f, calm }) => {
+  const w = el.width ?? el.height;
+  const x0 = el.align === 'left' ? PAD : el.align === 'right' ? W - PAD - w : (W - w) / 2;
+  const m = 40;
+  const L = x0 - m, R = x0 + w + m;
+  const lock = el.lock ?? (calm ? 40 : 18);
+  const bands = (ff: number) => [0, 1, 2, 3].map((i) => {
+    const a = i * (calm ? CALM.sliceStagger : 2);
+    if (ff < a) return null;
+    const top = (el.height * i) / 4, bot = (el.height * (i + 1)) / 4;
+    const side = i % 2 === 0 ? 1 : -1;
+    const resid = IMG_OFF[i] * el.height * (calm ? 0.35 : 0.5);
+    let x: number;
+    if (calm) {
+      const q = calmEase(clamp01((ff - a) / CALM.sliceIn));
+      x = side * (R - L) * (1 - q) + resid * q;
+      if (ff >= lock) x = resid * (1 - easeInOut(clamp01((ff - lock) / CALM.sliceLock)));
+    } else {
+      const q = easeOut(clamp01((ff - a) / 7));
+      x = side * 1300 * (1 - q) + resid * q;
+      if (ff >= lock) x = resid * (1 - osc(ff - lock - i * 0.6, 0.95, 0.42));
+    }
+    const clip = calm ? poly([[L, top], [R, top], [R, bot], [L, bot]]) : poly([[-400, top], [W + 400, top], [W + 400, bot], [-400, bot]]);
+    return (
+      <div key={i} style={{ position: 'absolute', inset: 0, clipPath: clip }}>
+        <Img src={staticFile(el.src)} style={{ position: 'absolute', left: x0, top: 0, width: w, height: el.height, transform: `translateX(${x}px)` }} />
+      </div>
+    );
+  });
+  return (
+    <div style={{ position: 'absolute', left: 0, top: el.y, width: W, height: el.height }}>
+      {calm ? bands(f) : <Accum f={f} active={f > 0 && f < 14} samples={10} render={(ff) => <>{bands(ff)}</>} />}
+    </div>
+  );
+};
+
 export const ImageElement: React.FC<{ el: ImageEl; f: number; exit: number }> = ({ el, f, exit }) => {
   const justify = el.align === 'left' ? 'flex-start' : el.align === 'right' ? 'flex-end' : 'center';
   const calm = useTempo() === 'calm';
+  if (el.motion === 'slices' && exit === 0) return <ImageSlices el={el} f={f} calm={calm} />;
   const inP = calm ? calmEase(clamp01(f / CALM.slide)) : osc(f);
   const y = el.motion === 'cut' ? 0 : (1 - inP) * el.height * 1.05 + easeIn(exit) * el.height * 1.05;
   return (
