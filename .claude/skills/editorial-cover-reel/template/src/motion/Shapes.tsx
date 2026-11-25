@@ -72,7 +72,7 @@ const ImageSlices: React.FC<{ el: ImageEl; f: number; calm: boolean }> = ({ el, 
   const bands = (ff: number) => [0, 1, 2, 3].map((i) => {
     const a = i * (calm ? CALM.sliceStagger : 2);
     if (ff < a) return null;
-    const top = (el.height * i) / 4, bot = (el.height * (i + 1)) / 4;
+    const top = Math.round((el.height * i) / 4) - (i > 0 ? 1 : 0), bot = Math.round((el.height * (i + 1)) / 4); // 1 px overlap, no seam
     const side = i % 2 === 0 ? 1 : -1;
     const resid = IMG_OFF[i] * el.height * (calm ? 0.35 : 0.5);
     let x: number;

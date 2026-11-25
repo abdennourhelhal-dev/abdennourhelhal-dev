@@ -166,8 +166,9 @@ const slicesAt = (el: TextEl, g: Geo, f: number) => {
   return [0, 1, 2, 3].map((i) => {
     const a = i * 2;
     if (f < a) return null;
-    const top = i === 0 ? -g.rowH : (g.rowH * i) / 4;
-    const bot = i === 3 ? g.rowH * 2 : (g.rowH * (i + 1)) / 4;
+    // integer band edges + 1 px overlap: no hairline seam once the slices lock
+    const top = i === 0 ? -g.rowH : Math.round((g.rowH * i) / 4) - 1;
+    const bot = i === 3 ? g.rowH * 2 : Math.round((g.rowH * (i + 1)) / 4);
     const side = i % 2 === 0 ? 1 : -1;
     const resid = OFF[i] * g.size;
     const q = easeOut(clamp01((f - a) / 7));
@@ -262,8 +263,8 @@ const CalmSlices: React.FC<{ el: TextEl; g: Geo; f: number }> = ({ el, g, f }) =
       {[0, 1, 2, 3].map((i) => {
         const a = i * CALM.sliceStagger;
         if (f < a) return null;
-        const top = i === 0 ? -g.rowH : (g.rowH * i) / 4;
-        const bot = i === 3 ? g.rowH * 2 : (g.rowH * (i + 1)) / 4;
+        const top = i === 0 ? -g.rowH : Math.round((g.rowH * i) / 4) - 1;
+        const bot = i === 3 ? g.rowH * 2 : Math.round((g.rowH * (i + 1)) / 4);
         const side = i % 2 === 0 ? 1 : -1;
         const resid = OFF[i] * g.size * 0.6;
         const q = calmEase(clamp01((f - a) / CALM.sliceIn));
